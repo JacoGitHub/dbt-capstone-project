@@ -262,9 +262,9 @@ Add your solution in the next lines:
   ``` 
 * Execute an SQL on the Snowflake UI to ensure the new record has been added:
   ```
-  REPLACE THIS CODE BLOCK BY PASTING 
-  1) THE SQL to extract the new record from `silver_airport_comments`
-  2) THE result you see in Snowflake
+  1) select * from AIRSTATS.DEV.SILVER_AIRPORT_COMMENTS where COMMENT_ID = 700000;
+  2)
+  <img width="3038" height="571" alt="image" src="https://github.com/user-attachments/assets/9ab35a47-5820-41bf-b098-6946699be1a0" />
   ``` 
 
 **Requirements** 
