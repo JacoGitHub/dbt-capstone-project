@@ -253,7 +253,8 @@ Add a new record to `RAW.airport_comments`. Then materialize the incremental mod
 Add your solution in the next lines:
 * Adding a new record:
   ```
-  REPLACE THIS CODE BLOCK BY PASTING THE SQL for adding a new record to `RAW.airport_comments`
+  INSERT INTO AIRSTATS.RAW.airport_comments (ID, THREAD_REF, AIRPORT_REF, AIRPORT_IDENT, DATE, MEMBER_NICKNAME, SUBJECT, BODY)
+  VALUES (700000, 82704, 39824, 'CA-0178', '2026-04-24 16:28:47', 'SuperUser', 'Subject_Text', 'Body_Text')
   ```
 * Command to execute to update this model (but only this model, not all the models):
   ```
