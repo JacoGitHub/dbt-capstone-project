@@ -1,0 +1,144 @@
+models:
+  - name: silver_airports
+    description: '{{ doc("silver_airports") }}'
+    columns:
+      - name: airport_ident
+        description: "Unique ICAO identifier for the airport"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: airport_type
+        description: 'Type of airports'
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - small_airport
+                  - medium_airport
+                  - large_airport
+                  - heliport
+                  - seaplane_base
+                  - balloonport
+                  - closed
+
+      - name: airport_name
+        description: "Name of the airport"
+        data_tests:
+          - not_null
+
+      - name: airport_lat
+        description: "Latitude coordinate"
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -90 # (Optional)
+                max_value: 90 # (Optional)
+
+      - name: airport_long
+        description: "Longitude coordinate"
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -180
+                max_value: 180
+
+      - name: continent
+        description: "Continent code"
+
+      - name: iso_country
+        description: "ISO country code"
+
+      - name: iso_region
+        description: "ISO region code"
+
+  - name: silver_runways
+    description: "Runway per airports"
+    columns:
+      - name: runway_id
+        description: "Unique identifier"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: airport_ident
+        description: "Foreign key to airport table"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('silver_airports')
+                field: airport_ident
+              config:
+                severity: warn
+
+      - name: runway_length_ft
+        description: "Length of the runway"
+
+      - name: runway_width_ft
+        description: "Width of the runway"
+
+      - name: runway_surface
+        description: "Surface of the runway"
+        data_tests:
+          - not_null
+
+      - name: runway_lighted
+        description: "If the runway has lighting Yes/No"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:
+                column_type: number
+
+      - name: runway_closed
+        description: "If the runway is closed Yes/No"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:
+                column_type: number
+
+  - name: silver_airport_comments
+    description: "Comments about airports"
+    columns:
+      - name: comment_id
+        description: "Unique identifier for the comment"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: airport_ident
+        description: "Foreign key to airport"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('silver_airports')
+                field: airport_ident
+              config:
+                severity: warn
+
+      - name: comment_timestamp
+        description: "When comment was inserted"
+
+      - name: member_nickname
+        description: "Username of the comment."
+
+      - name: comment_subject
+        description: "Subject comment"
+
+      - name: comment_body
+        description: "Body of the comment"
+        data_tests:
+          - not_null
+
+      - name: loaded_at
+        description: "Timestamp silver layer"
